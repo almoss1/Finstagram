@@ -84,15 +84,15 @@ def registerAuth():
         return render_template('index.html')
 
 
-@app.route('/home')
-def home():
-    user = session['username']
-    # cursor = conn.cursor();
-    # query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
-    # cursor.execute(query, (user))
-    # data = cursor.fetchall()
-    # cursor.close()
-    return render_template('home.html', username=user, posts=data)
+# @app.route('/home')
+# def home():
+#     user = session['username']
+#     cursor = conn.cursor();
+#     query = 'SELECT username,password FROM Person'
+#     cursor.execute(query, (user))
+#     data = cursor.fetchall()
+#     cursor.close()
+#     return render_template('home.html', username=user, posts=data)
 
         
 

@@ -17,19 +17,17 @@
 Here are your posts:
 
 <table>
-	<th>Time</th>
-	<th>Post</th>
+	<th>user</th>
+	<th>pass</th>
 
 {% for line in posts %}
 	<tr>
-		<td>{{line.ts}}</td>
-		<td>{{line.blog_post}}</td>
+		<td>{{line.username}}</td>
+		<td>{{line.password}}</td>
 	</tr>
 {% endfor %}
 </table>
 
-<a href="/select_blogger">Select a blogger</a>
-<br>
 <a href="/logout">Logout</a>
 
 </body>
