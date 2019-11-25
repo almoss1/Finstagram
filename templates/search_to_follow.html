@@ -11,7 +11,6 @@
         <form action="/follow" method="POST">
             <input type="text" name="followed" placeholder="Username" required><br>
             <input type="submit" value=Submit>
-        
             {% if error %}
             <p class="error"><strong>Error:</strong> {{error}}</p>
             {% endif %}
