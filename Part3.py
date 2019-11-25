@@ -32,13 +32,28 @@ def register():
 
 @app.route('/home')
 def home():
+    ##NEED HELP WITH OUPUTTING THIS QUERY
     user = session['username']
     cursor = conn.cursor();
-    query = 'SELECT photoID,photoPoster FROM Photo WHERE photoPoster = %s' # note: only checks for when user is poster
+    query = 'SELECT photoID,photoPoster,caption  FROM Photo   WHERE photoPoster = %s'
+
+# RIGHT ONE
+# 'SELECT DISTINCT photoID, photoPoster FROM Photo where PhotoId, photoPoster IN(SELECT PhotoId, photoPoster FROM (Photo JOIN Person ON (Photo.PhotoPoster=Person.Username)) JOIN Follow ON (Follow.username_followed=Photo.PhotoPoster) WHERE followstatus=True and photo.allFollowers=True) OR PhotoId, photoPoster IN (SELECT PhotoId, photoPoster FROM SharedWith JOIN BelongTo ON (SharedWith.groupOwner= BelongTo.owner_username AND SharedWith.groupName=BelongTo.groupName))'
+
+# follow -- username_followed === photoposter
+    #ownwer of phot = user
+
+    # user = belong to frinedgroup that shared with
+    # user follows the owner of phot and photo allfolllowers == true
+  
+
     cursor.execute(query, (user))
     data = cursor.fetchall()
     cursor.close()
     return render_template('home.html', username=user, posts=data)
+
+# @app.route('/home')
+# def visible_photo():
 
 
 #Authenticates the login

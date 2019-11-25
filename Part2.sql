@@ -1,4 +1,6 @@
-﻿CREATE TABLE Person(
+﻿
+CREATE TABLE Person
+(
     username VARCHAR(20), 
     password CHAR(64), 
     firstName VARCHAR(20),
@@ -8,7 +10,8 @@
 );
 
 
-CREATE TABLE Friendgroup(
+CREATE TABLE Friendgroup
+(
     groupOwner VARCHAR(20), 
     groupName VARCHAR(20), 
     description VARCHAR(1000), 
@@ -17,9 +20,8 @@ CREATE TABLE Friendgroup(
 );
 
 
-
-
-CREATE TABLE Photo (
+CREATE TABLE Photo 
+(
     photoID int AUTO_INCREMENT, 
     postingdate DATETIME,
     filepath VARCHAR(100),
@@ -27,13 +29,14 @@ CREATE TABLE Photo (
     caption VARCHAR(100),
     photoPoster VARCHAR(20),
     PRIMARY KEY (photoID),
-    FOREIGN KEY(photoPoster) REFERENCES Person(username)
+    FOREIGN KEY (photoPoster) REFERENCES Person (username)
 );
 
 
 
 
-CREATE TABLE Likes (
+CREATE TABLE Likes 
+(
     username VARCHAR(20), 
     photoID int, 
     liketime DATETIME, 
@@ -44,7 +47,8 @@ CREATE TABLE Likes (
 );  
 
 
-CREATE TABLE Tagged (
+CREATE TABLE Tagged 
+(
     username VARCHAR(20), 
     photoID int, 
     tagstatus Boolean, 
@@ -54,7 +58,8 @@ CREATE TABLE Tagged (
 );              
 
 
-CREATE TABLE SharedWith ( 
+CREATE TABLE SharedWith 
+( 
     groupOwner VARCHAR(20), 
     groupName VARCHAR(20), 
     photoID int, 
@@ -64,7 +69,8 @@ CREATE TABLE SharedWith (
 );
 
 
-CREATE TABLE BelongTo (
+CREATE TABLE BelongTo 
+(
     member_username VARCHAR(20), 
     owner_username VARCHAR(20),
     groupName VARCHAR(20), 
@@ -76,7 +82,8 @@ CREATE TABLE BelongTo (
 
 
 
-CREATE TABLE Follow (
+CREATE TABLE Follow 
+(
     username_followed VARCHAR(20), 
     username_follower VARCHAR(20), 
     followstatus Boolean,
