@@ -1,0 +1,27 @@
+
+<html >
+<head>
+
+</head>
+<body>
+    
+    <div class="container">
+        <h1>Search Usernames to Follow</h1>
+
+        <form action="/follow" method="POST">
+            <input type="text" name="followed" placeholder="Username" required><br>
+            <input type="submit" value=Submit>
+        
+            {% if error %}
+            <p class="error"><strong>Error:</strong> {{error}}</p>
+            {% endif %}
+        </form>
+    
+
+
+<br>
+<br>
+<a href="/home">Home</a>
+</div>
+</body>
+</html>

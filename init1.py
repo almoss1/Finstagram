@@ -137,6 +137,48 @@ def post():
     cursor.close()
     return redirect(url_for('home'))
 
+
+@app.route('/follow', methods = ['GET','POST'])
+def follow():
+    username = session['username']
+    cursor = conn.cursor();
+
+    followed = request.form['followed']
+    query = 'SELECT * FROM Person where username =%s'
+    cursor.execute(query, (followed))   
+    data = cursor.fetchone()
+    # Put in a wrong username tht doesnt exist
+    error = None
+    if(data is None):
+        error = "Invalid Username"
+        return render_template('search_to_follow.html', error=error)
+
+    # check to see if the person they want to follow is themselves
+    if(followed.lower() == username.lower()):
+        error = 'Invlaid Follow Request'
+        return render_template('search_to_follow.html', error=error)
+    query = 'SELECT * FROM Follow WHERE username_followed=%s AND username_follower =%s'
+    cursor.execute(query, (followed,username))
+    data = cursor.fetchone()
+
+    # the follow request already exists 
+    if(data):
+        error = 'Invlaid Follow Request'
+        return render_template('search_to_follow.html', error=error)
+
+
+    query = 'INSERT INTO Follow (username_followed,username_follower, followstatus) VALUES(%s, %s, %s)'
+    cursor.execute(query, (followed,username,False))
+     
+    conn.commit()
+    cursor.close()
+    return redirect(url_for('home'))
+   
+
+
+@app.route('/search_to_follow')
+def search_to_follow():
+    return render_template('search_to_follow.html')
 # @app.route('/select_blogger')
 # def select_blogger():
 #     #check that user is logged in
