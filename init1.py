@@ -160,6 +160,25 @@ def post():
 #     cursor.close()
 #     return render_template('show_posts.html', poster_name=poster, posts=data)
 
+@app.route('/show_photo/<int:currPhotoID>', methods=["GET"])
+def show_photo(currPhotoID):
+    cursor = conn.cursor()
+    # currPost = request.args['photoID']
+    query = 'SELECT * FROM photo JOIN Person ON(username=photoPoster)  WHERE photoID=%s'
+    cursor.execute(query, (currPhotoID))
+    data = cursor.fetchone()
+
+    query = 'SELECT * FROM Tagged NATURAL JOIN Person WHERE photoID=%s AND tagstatus=TRUE'
+    cursor.execute(query, (currPhotoID))
+    taggees = cursor.fetchone()
+
+    query = 'SELECT * FROM Likes NATURAL JOIN Person WHERE photoID=%s'
+    cursor.execute(query, (currPhotoID))
+    likes = cursor.fetchone()
+
+    cursor.close()
+    return render_template('show_photo.html', post=data, tagged=taggees, likees=likes)
+
 @app.route('/logout')
 def logout():
     session.pop('username')

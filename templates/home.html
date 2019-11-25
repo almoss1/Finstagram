@@ -1,0 +1,42 @@
+<html>
+<head>
+</head>
+<body>
+<form action="/post" method="POST">
+	<h1>Welcome {{username}}</h1>
+	Add a Photo:</br>
+	<input type="text" name = "filepath" placeholder="Filepath" required/> </br>
+	<input type="text" name = "caption" placeholder="Caption" required/> </br>
+	Who can view? </br>
+	<input type="radio" name = "isAllFollowers" value="true" checked /> All Followers </br>
+	<input type="radio" name = "isAllFollowers" value="false" /> Friend Groups </br>
+
+	<input type="submit" value = Post />
+</form>
+
+<style type="text/css">
+	table, th, td{
+		border: 1px solid black;
+	}
+</style>
+
+Here are your photos:
+
+<table>
+	<th>photoID</th>
+	<th>photoPoster</th>
+
+{% for line in posts %}
+	<tr>
+		<td><a href="/show_photo/{{line.photoID}}">{{line.photoID}}</a></td>
+		<td>{{line.photoPoster}}</td>
+	</tr>
+{% endfor %}
+</table>
+
+<a href="/logout">Logout</a>
+
+</body>
+
+
+</html>
