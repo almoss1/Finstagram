@@ -1,0 +1,29 @@
+
+<html >
+    <head>
+    </head>
+    <body>
+        
+        <div class="container">
+            <h1>Manage Follow Requests</h1>
+
+            <table>
+                <th>photoID</th>
+                <th>photoPoster</th>
+                
+            {% for line in pending %}
+              <tr>
+                <td>{{pending.username}}</td>
+                <td><a href="">Accept</a></td>
+                <td><a href="">Reject</a></td>
+              </tr>
+            {% endfor %}
+        
+    
+    
+    <br>
+    <br>
+    <a href="/home">Home</a>
+    </div>
+    </body>
+    </html>

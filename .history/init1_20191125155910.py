@@ -184,32 +184,9 @@ def search_to_follow():
 def manage_follow_requests():
     user = session['username']
     cursor = conn.cursor();
-    query = 'SELECT * FROM Follow WHERE username_followed = %s AND followstatus=FALSE'
-    cursor.execute(query, (user))
-    data = cursor.fetchall()
-    cursor.close()
-    return render_template('manage_follow_requests.html', pending=data)
+    query = 'SELECT * FROM Follow WHERE photoPoster = %s OR (photoID, photoPoster) IN(SELECT photoID, photoPoster FROM (Photo AS P JOIN Follow AS F ON (F.username_followed=P.photoPoster)) WHERE followstatus=TRUE AND P.allFollowers=True AND F.username_follower = %s)OR (photoID, photoPoster) IN (SELECT photoID, photoPoster FROM SharedWith JOIN BelongTo ON (SharedWith.groupOwner= BelongTo.owner_username AND SharedWith.groupName=BelongTo.groupName) WHERE SharedWith.photoID = photoID AND BelongTo.member_username = %s)'
 
-@app.route('/accept_follower/<string:follower>', methods = ['GET', 'POST'])
-def accept_follower(follower):
-    user = session['username']
-    cursor = conn.cursor();
-    query = 'UPDATE Follow SET followstatus = TRUE WHERE username_followed = %s AND username_follower = %s'
-    cursor.execute(query, (user, follower))
-    conn.commit()
-    cursor.close()
-    return manage_follow_requests()
-
-@app.route('/reject_follower/<string:follower>', methods = ['GET', 'POST'])
-def reject_follower(follower):
-    user = session['username']
-    cursor = conn.cursor();
-    query = 'DELETE FROM Follow WHERE username_followed = %s AND username_follower = %s'
-    cursor.execute(query, (user, follower))
-    conn.commit()
-    cursor.close()
-
-    return manage_follow_requests()
+    return render_template('manage_follow_requests.html')
 # @app.route('/select_blogger')
 # def select_blogger():
 #     #check that user is logged in

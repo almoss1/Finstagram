@@ -190,24 +190,15 @@ def manage_follow_requests():
     cursor.close()
     return render_template('manage_follow_requests.html', pending=data)
 
-@app.route('/accept_follower/<string:follower>', methods = ['GET', 'POST'])
+@app.route('/accept_follower/<string:follower>', methods = ['POST'])
 def accept_follower(follower):
     user = session['username']
-    cursor = conn.cursor();
-    query = 'UPDATE Follow SET followstatus = TRUE WHERE username_followed = %s AND username_follower = %s'
-    cursor.execute(query, (user, follower))
-    conn.commit()
-    cursor.close()
+
     return manage_follow_requests()
 
-@app.route('/reject_follower/<string:follower>', methods = ['GET', 'POST'])
+@app.route('/reject_follower/<string:follower>', methods = ['POST'])
 def reject_follower(follower):
     user = session['username']
-    cursor = conn.cursor();
-    query = 'DELETE FROM Follow WHERE username_followed = %s AND username_follower = %s'
-    cursor.execute(query, (user, follower))
-    conn.commit()
-    cursor.close()
 
     return manage_follow_requests()
 # @app.route('/select_blogger')

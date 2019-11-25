@@ -1,0 +1,30 @@
+
+<html >
+    <head>
+    </head>
+    <body>
+        
+        <div class="container">
+            <h1>Manage Follow Requests</h1>
+
+            <table>
+                <th>Follower</th>
+                <th>Accept</th>
+                <th>Reject</th>
+
+            {% for line in pending %}
+              <tr>
+                <td>{{pending.username}}</td>
+                <td><a href=""><button type="button" class="btn btn-primary"></button></a></td>
+                <td><a href=""><button type="button" class="btn btn-primary"></button></a></td>
+              </tr>
+            {% endfor %}
+        
+    
+    
+    <br>
+    <br>
+    <a href="/home">Home</a>
+    </div>
+    </body>
+    </html>
