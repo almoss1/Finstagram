@@ -35,10 +35,10 @@ def home():
     ##NEED HELP WITH OUPUTTING THIS QUERY
     user = session['username']
     cursor = conn.cursor();
-    # query = 'SELECT photoID,photoPoster,caption  FROM Photo   WHERE photoPoster = %s'
+    query = 'SELECT photoID,photoPoster,caption  FROM Photo   WHERE photoPoster = %s'
 
 # RIGHT ONE
-    query = 'SELECT DISTINCT photoID, photoPoster FROM Photo WHERE (photoID, photoPoster) IN(SELECT photoID, photoPoster FROM (Photo AS P JOIN Follow AS F ON (F.username_followed=P.photoPoster)) WHERE followstatus=TRUE and P.allFollowers=True) OR photoPoster = %s OR (photoID, photoPoster) IN (SELECT photoID, photoPoster FROM SharedWith JOIN BelongTo ON (SharedWith.groupOwner= BelongTo.owner_username AND SharedWith.groupName=BelongTo.groupName))'
+# 'SELECT DISTINCT photoID, photoPoster FROM Photo where PhotoId, photoPoster IN(SELECT PhotoId, photoPoster FROM (Photo JOIN Person ON (Photo.PhotoPoster=Person.Username)) JOIN Follow ON (Follow.username_followed=Photo.PhotoPoster) WHERE followstatus=True and photo.allFollowers=True) OR PhotoId, photoPoster IN (SELECT PhotoId, photoPoster FROM SharedWith JOIN BelongTo ON (SharedWith.groupOwner= BelongTo.owner_username AND SharedWith.groupName=BelongTo.groupName))'
 
 # follow -- username_followed === photoposter
     #ownwer of phot = user
