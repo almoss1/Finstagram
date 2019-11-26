@@ -4,7 +4,13 @@
         
         </head>
         <body>
-            
+                <style type="text/css">
+                    table, th, td{
+                        border: 1px solid black;
+                    }
+                </style>
+
+
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         
@@ -15,14 +21,29 @@
         <br><br><br>
                 <form action="/search" method="POST">
                     <input class="form-control col-2" type="text" name="photoPoster" placeholder="Poster Name" required><br>
-                    <input type="submit" value=Submit>
+                  <input type="submit" value="Submit">
                    
                     {% if error %}
                     <p class="error"><strong>Error:</strong> {{error}}</p>
                     {% endif %}
                 </form>
             
+
+                Here are {{username}}'s photos:
+
+                <table>
+                    <th>photoID</th>
+                    <th>photoPoster</th>
         
+                    {% for line in posts %}
+                    <tr>
+                        <td><a href="/show_photo/{{line.photoID}}">{{line.photoID}}</a></td>
+                        <td>{{line.photoPoster}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                
         
         <br>
         <br>

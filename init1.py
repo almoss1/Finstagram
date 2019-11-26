@@ -38,10 +38,7 @@ def home():
 
 
     query = 'SELECT DISTINCT photoID, photoPoster FROM Photo WHERE photoPoster = %s OR (photoID, photoPoster) IN(SELECT photoID, photoPoster FROM (Photo AS P JOIN Follow AS F ON (F.username_followed=P.photoPoster)) WHERE followstatus=TRUE AND P.allFollowers=True AND F.username_follower = %s)OR (photoID, photoPoster) IN (SELECT photoID, photoPoster FROM SharedWith JOIN BelongTo ON (SharedWith.groupOwner= BelongTo.owner_username AND SharedWith.groupName=BelongTo.groupName) WHERE SharedWith.photoID = photoID AND BelongTo.member_username = %s)'
-
-
-  
-
+    
     cursor.execute(query, (user, user, user))
     data = cursor.fetchall()
     cursor.close()
@@ -77,7 +74,8 @@ def follow():
     query = 'SELECT * FROM Person where username =%s'
     cursor.execute(query, (followed))   
     data = cursor.fetchone()
-    # Put in a wrong username tht doesnt exist
+
+    # Put in a wrong username that doesnt exist
     error = None
     if(data is None):
         error = "Invalid Username"
@@ -93,7 +91,7 @@ def follow():
 
     # the follow request already exists 
     if(data):
-        error = 'Invlaid Follow Request'
+        error = 'Invalid Follow Request'
         return render_template('search_to_follow.html', error=error)
 
 
@@ -109,6 +107,8 @@ def follow():
 @app.route('/search_to_follow')
 def search_to_follow():
     return render_template('search_to_follow.html')
+
+
 
 @app.route('/manage_follow_requests')
 def manage_follow_requests():
@@ -173,19 +173,32 @@ def search():
     cursor = conn.cursor();
     photoPoster = request.form['photoPoster']
 
+### need to make it that 
     query = 'SELECT DISTINCT photoID, photoPoster FROM Photo WHERE photoPoster = %s OR (photoID, photoPoster) IN(SELECT photoID, photoPoster FROM (Photo AS P JOIN Follow AS F ON (F.username_followed=P.photoPoster)) WHERE followstatus=TRUE AND P.allFollowers=True AND F.username_follower = %s)OR (photoID, photoPoster) IN (SELECT photoID, photoPoster FROM SharedWith JOIN BelongTo ON (SharedWith.groupOwner= BelongTo.owner_username AND SharedWith.groupName=BelongTo.groupName) WHERE SharedWith.photoID = photoID AND BelongTo.member_username = %s)'
-
-    cursor.execute(query, (photoPoster, photoPoster, photoPoster))
+    cursor.execute(query, (photoPoster,photoPoster,photoPoster))
     data = cursor.fetchall()
+    
+    # query = 'SELECT * FROM Photo where photoPoster =%s'
 
+    #when i chnaged something then the invlaid username error doesnt
+    # popo up anymore and it just lets it happen
+    # Have to fix the second if statement to see if you dont follow the person
+    error = None
     if(data is None):
         error = "Invalid Username"
         return render_template('search_by_poster.html', error=error)
+    query = 'SELECT * FROM Follow where username_followed = %s and username_follower =%s'
+    cursor.execute(query, (photoPoster,user))
+    isFollowed = cursor.fetchall()
 
+    if(isFollowed is None):
+        error = "You are not following this person"
+        return render_template('search_by_poster.html', error=error)
 
 
     cursor.close()
-    return render_template('home.html', username=user, posts=data)
+    return render_template('search_by_poster.html', username = photoPoster, posts=data, error=error)
+
 
 
 
