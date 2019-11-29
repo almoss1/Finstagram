@@ -85,7 +85,7 @@ def edit(currPhotoID):
 @app.route('/delete_post/<int:currPhotoID>', methods=['GET', 'POST'])
 def delete_post(currPhotoID):
     cursor = conn.cursor();
-    query = 'DELETE FROM Photo WHERE photoID = %s'
+    query = 'DELETE FROM Follow WHERE photoID = %s'
     cursor.execute(query, (currPhotoID))
     conn.commit()
     cursor.close()

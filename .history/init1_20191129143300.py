@@ -82,15 +82,6 @@ def edit(currPhotoID):
     cursor.close()
     return redirect(url_for('home'))
 
-@app.route('/delete_post/<int:currPhotoID>', methods=['GET', 'POST'])
-def delete_post(currPhotoID):
-    cursor = conn.cursor();
-    query = 'DELETE FROM Photo WHERE photoID = %s'
-    cursor.execute(query, (currPhotoID))
-    conn.commit()
-    cursor.close()
-    return redirect(url_for('home'))
-
 @app.route('/follow', methods = ['GET','POST'])
 def follow():
     username = session['username']
