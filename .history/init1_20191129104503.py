@@ -64,23 +64,6 @@ def post():
     cursor.close()
     return redirect(url_for('home'))
 
-@app.route('/edit/<int:currPhotoID>', methods=['GET', 'POST'])
-def edit(currPhotoID):
-    cursor = conn.cursor();
-    filepath = request.form['filepath']
-    caption = request.form['caption']
-    isAllFollowers = request.form['isAllFollowers']
-    if (isAllFollowers == 'true'):
-        isAllFollowers = True
-    else:
-        isAllFollowers = False
-    
-    # query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s)'
-    query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s'
-    cursor.execute(query, (filepath, caption, isAllFollowers, currPhotoID))
-    conn.commit()
-    cursor.close()
-    return redirect(url_for('home'))
 
 @app.route('/follow', methods = ['GET','POST'])
 def follow():
@@ -189,7 +172,7 @@ def edit_post(currPhotoID):
     query = 'SELECT * FROM Photo WHERE photoID=%s'
     cursor.execute(query, (currPhotoID))
     data = cursor.fetchone()
-    return render_template('edit_post.html', post=data)
+    return render_template('edit_post.html', photo=data)
 
 @app.route('/search_by_poster')
 def search_by_poster():

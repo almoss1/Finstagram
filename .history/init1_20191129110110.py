@@ -76,8 +76,8 @@ def edit(currPhotoID):
         isAllFollowers = False
     
     # query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s)'
-    query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s'
-    cursor.execute(query, (filepath, caption, isAllFollowers, currPhotoID))
+    query = 'UPDATE Photo SET filepath=%s WHERE photoID=%s)'
+    cursor.execute(query, (filepath, currPhotoID))
     conn.commit()
     cursor.close()
     return redirect(url_for('home'))

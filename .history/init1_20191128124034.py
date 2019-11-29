@@ -64,23 +64,6 @@ def post():
     cursor.close()
     return redirect(url_for('home'))
 
-@app.route('/edit/<int:currPhotoID>', methods=['GET', 'POST'])
-def edit(currPhotoID):
-    cursor = conn.cursor();
-    filepath = request.form['filepath']
-    caption = request.form['caption']
-    isAllFollowers = request.form['isAllFollowers']
-    if (isAllFollowers == 'true'):
-        isAllFollowers = True
-    else:
-        isAllFollowers = False
-    
-    # query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s)'
-    query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s'
-    cursor.execute(query, (filepath, caption, isAllFollowers, currPhotoID))
-    conn.commit()
-    cursor.close()
-    return redirect(url_for('home'))
 
 @app.route('/follow', methods = ['GET','POST'])
 def follow():
@@ -176,20 +159,13 @@ def show_photo(currPhotoID):
     cursor.execute(query, (currPhotoID))
     likes = cursor.fetchone()
 
-    query = 'SELECT * FROM photo JOIN Person ON(username=photoPoster)  WHERE photoID=%s AND username=%s'
-    cursor.execute(query, (currPhotoID, user))
-    owner = cursor.fetchone()
+    owner = False
+    if (data.photoPoster == session['username']):
+        owner = True
 
     cursor.close()
     return render_template('show_photo.html', post=data, tagged=taggees, likees=likes, owner=owner)
 
-@app.route('/edit_post/<int:currPhotoID>')
-def edit_post(currPhotoID):
-    cursor = conn.cursor()
-    query = 'SELECT * FROM Photo WHERE photoID=%s'
-    cursor.execute(query, (currPhotoID))
-    data = cursor.fetchone()
-    return render_template('edit_post.html', post=data)
 
 @app.route('/search_by_poster')
 def search_by_poster():

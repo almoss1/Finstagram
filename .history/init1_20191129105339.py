@@ -75,8 +75,7 @@ def edit(currPhotoID):
     else:
         isAllFollowers = False
     
-    # query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s)'
-    query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s'
+    query = 'UPDATE Photo SET filepath=%s AND caption=%s AND allFollowers=%s WHERE photoID=%s)'
     cursor.execute(query, (filepath, caption, isAllFollowers, currPhotoID))
     conn.commit()
     cursor.close()

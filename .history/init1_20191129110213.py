@@ -66,7 +66,7 @@ def post():
 
 @app.route('/edit/<int:currPhotoID>', methods=['GET', 'POST'])
 def edit(currPhotoID):
-    cursor = conn.cursor();
+    cursor = conn.cursor()
     filepath = request.form['filepath']
     caption = request.form['caption']
     isAllFollowers = request.form['isAllFollowers']
@@ -76,8 +76,8 @@ def edit(currPhotoID):
         isAllFollowers = False
     
     # query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s)'
-    query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s'
-    cursor.execute(query, (filepath, caption, isAllFollowers, currPhotoID))
+    query = 'UPDATE Photo SET filepath=%s WHERE photoID=%s)'
+    cursor.execute(query, (filepath, currPhotoID))
     conn.commit()
     cursor.close()
     return redirect(url_for('home'))
