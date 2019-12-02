@@ -28,7 +28,7 @@
                     {% endif %}
                 </form>
             
-
+                {% if username %}
                 Here are {{username}}'s photos:
 
                 <table>
@@ -42,7 +42,7 @@
                     </tr>
                     {% endfor %}
                 </table>
-
+                {% endif %}
                 
         
         <br>

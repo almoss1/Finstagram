@@ -82,6 +82,18 @@ def edit(currPhotoID):
     cursor.close()
     return redirect(url_for('home'))
 
+
+
+@app.route('/edit_post/<int:currPhotoID>')
+def edit_post(currPhotoID):
+    cursor = conn.cursor()
+    query = 'SELECT * FROM Photo WHERE photoID=%s'
+    cursor.execute(query, (currPhotoID))
+    data = cursor.fetchone()
+    return render_template('edit_post.html', post=data)
+
+
+
 @app.route('/delete_post/<int:currPhotoID>', methods=['GET', 'POST'])
 def delete_post(currPhotoID):
     cursor = conn.cursor();
@@ -192,19 +204,11 @@ def show_photo(currPhotoID):
     cursor.close()
     return render_template('show_photo.html', post=data, tagged=taggees, likees=likes, owner=owner)
 
-@app.route('/edit_post/<int:currPhotoID>')
-def edit_post(currPhotoID):
-    cursor = conn.cursor()
-    query = 'SELECT * FROM Photo WHERE photoID=%s'
-    cursor.execute(query, (currPhotoID))
-    data = cursor.fetchone()
-    return render_template('edit_post.html', post=data)
-
 
 
 @app.route('/search_by_poster')
 def search_by_poster():
-    return render_template('search_by_poster.html')
+    return render_template('search_by_poster.html', username = None, posts=None, error=None)
 
 
 @app.route('/search', methods = ['GET','POST'])
@@ -214,8 +218,9 @@ def search():
     photoPoster = request.form['photoPoster']
 
 ### need to make it that 
-    query = 'SELECT DISTINCT photoID, photoPoster FROM Photo WHERE photoPoster = %s OR (photoID, photoPoster) IN(SELECT photoID, photoPoster FROM (Photo AS P JOIN Follow AS F ON (F.username_followed=P.photoPoster)) WHERE followstatus=TRUE AND P.allFollowers=True AND F.username_follower = %s)OR (photoID, photoPoster) IN (SELECT photoID, photoPoster FROM SharedWith JOIN BelongTo ON (SharedWith.groupOwner= BelongTo.owner_username AND SharedWith.groupName=BelongTo.groupName) WHERE SharedWith.photoID = photoID AND BelongTo.member_username = %s)'
-    cursor.execute(query, (photoPoster,photoPoster,photoPoster))
+    query = 'SELECT DISTINCT photoID, photoPoster FROM Photo WHERE photoPoster = %s 
+    # OR (photoID, photoPoster) IN(SELECT photoID, photoPoster FROM (Photo AS P JOIN Follow AS F ON (F.username_followed=P.photoPoster)) WHERE followstatus=TRUE AND P.allFollowers=True AND F.username_follower = %s)OR (photoID, photoPoster) IN (SELECT photoID, photoPoster FROM SharedWith JOIN BelongTo ON (SharedWith.groupOwner= BelongTo.owner_username AND SharedWith.groupName=BelongTo.groupName) WHERE SharedWith.photoID = photoID AND BelongTo.member_username = %s)'
+    cursor.execute(query, (photoPoster))
     data = cursor.fetchall()
     
     # query = 'SELECT * FROM Photo where photoPoster =%s'
@@ -224,14 +229,14 @@ def search():
     # popo up anymore and it just lets it happen
     # Have to fix the second if statement to see if you dont follow the person
     error = None
-    if(data is None):
+    if(len(data)==0):
         error = "Invalid Username"
         return render_template('search_by_poster.html', error=error)
-    query = 'SELECT * FROM Follow where username_followed = %s and username_follower =%s'
+    query = 'SELECT * FROM Follow where username_followed = %s and username_follower =%s and followStatus= 1'
     cursor.execute(query, (photoPoster,user))
     isFollowed = cursor.fetchall()
 
-    if(isFollowed is None):
+    if(len(isFollowed)==0):
         error = "You are not following this person"
         return render_template('search_by_poster.html', error=error)
 
