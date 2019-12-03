@@ -2,9 +2,17 @@
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
 import datetime
+import hashlib
+
+
+def computeMD5hash(string):
+    m = hashlib.md5()
+    m.update(string.encode('utf-8'))
+    return m.hexdigest()
 
 #Initialize the app from Flask
 app = Flask(__name__)
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 #Configure MySQL
 conn = pymysql.connect(host='localhost',
@@ -265,6 +273,7 @@ def loginAuth():
     username = request.form['username']
     password = request.form['password']
 
+    password = computeMD5hash(password)
     #cursor used to send queries
     cursor = conn.cursor()
     #executes query
@@ -295,6 +304,7 @@ def registerAuth():
     lastName = request.form['lastName']
     bio = request.form['bio']
 
+    password = computeMD5hash(password)
     #cursor used to send queries
     cursor = conn.cursor()
     #executes query
