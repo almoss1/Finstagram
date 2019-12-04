@@ -83,17 +83,7 @@ def like(currPhotoID):
     cursor.execute(query, (username, currPhotoID, datetime.datetime.now(), rating))
     conn.commit()
     cursor.close()
-    return show_photo(currPhotoID)
-
-@app.route('/unlike/<int:currPhotoID>', methods=['GET', 'POST'])
-def unlike(currPhotoID):
-    user = session['username']
-    cursor = conn.cursor();
-    query = 'DELETE FROM Likes WHERE username = %s AND photoID = %s'
-    cursor.execute(query, (user, currPhotoID))
-    conn.commit()
-    cursor.close()
-    return show_photo(currPhotoID)
+    return redirect(url_for('show_photo'))
 
 @app.route('/edit/<int:currPhotoID>', methods=['GET', 'POST'])
 def edit(currPhotoID):
@@ -222,22 +212,18 @@ def show_photo(currPhotoID):
 
     query = 'SELECT * FROM Tagged NATURAL JOIN Person WHERE photoID=%s AND tagstatus=TRUE'
     cursor.execute(query, (currPhotoID))
-    taggees = cursor.fetchall()
+    taggees = cursor.fetchone()
 
-    query = 'SELECT DISTINCT username, rating FROM Likes NATURAL JOIN Person WHERE photoID=%s'
+    query = 'SELECT * FROM Likes NATURAL JOIN Person WHERE photoID=%s'
     cursor.execute(query, (currPhotoID))
-    likes = cursor.fetchall()
+    likes = cursor.fetchone()
 
     query = 'SELECT * FROM photo JOIN Person ON(username=photoPoster)  WHERE photoID=%s AND username=%s'
     cursor.execute(query, (currPhotoID, user))
     owner = cursor.fetchone()
 
-    query = 'SELECT * FROM Likes WHERE photoID=%s AND username=%s'
-    cursor.execute(query, (currPhotoID, user))
-    liked = cursor.fetchone()
-
     cursor.close()
-    return render_template('show_photo.html', post=data, tagged=taggees, likees=likes, owner=owner, is_liked=liked)
+    return render_template('show_photo.html', post=data, tagged=taggees, likees=likes, owner=owner)
 
 
 

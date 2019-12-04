@@ -83,17 +83,7 @@ def like(currPhotoID):
     cursor.execute(query, (username, currPhotoID, datetime.datetime.now(), rating))
     conn.commit()
     cursor.close()
-    return show_photo(currPhotoID)
-
-@app.route('/unlike/<int:currPhotoID>', methods=['GET', 'POST'])
-def unlike(currPhotoID):
-    user = session['username']
-    cursor = conn.cursor();
-    query = 'DELETE FROM Likes WHERE username = %s AND photoID = %s'
-    cursor.execute(query, (user, currPhotoID))
-    conn.commit()
-    cursor.close()
-    return show_photo(currPhotoID)
+    return redirect(url_for('show_photo'))
 
 @app.route('/edit/<int:currPhotoID>', methods=['GET', 'POST'])
 def edit(currPhotoID):
@@ -224,7 +214,7 @@ def show_photo(currPhotoID):
     cursor.execute(query, (currPhotoID))
     taggees = cursor.fetchall()
 
-    query = 'SELECT DISTINCT username, rating FROM Likes NATURAL JOIN Person WHERE photoID=%s'
+    query = 'SELECT DISTINCT username FROM Likes NATURAL JOIN Person WHERE photoID=%s'
     cursor.execute(query, (currPhotoID))
     likes = cursor.fetchall()
 

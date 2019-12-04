@@ -39,7 +39,7 @@
 
 {% for line in likees %}
 	<tr>
-		<td>{{line.username}}</td>
+		<td>{{line.username}}{{line.rating}}</td>
 		<td>{{line.rating}}</td>
 	</tr>
 {% endfor %}
@@ -47,7 +47,7 @@
 <br><br>
 
 {% if is_liked %}
-<a href="/unlike/{{post.photoID}}">Unlike</a>
+Unlike
 <br>
 {% else %}
 <form action="/like/{{post.photoID}}" method="POST">

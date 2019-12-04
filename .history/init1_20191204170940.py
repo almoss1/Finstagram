@@ -83,17 +83,18 @@ def like(currPhotoID):
     cursor.execute(query, (username, currPhotoID, datetime.datetime.now(), rating))
     conn.commit()
     cursor.close()
-    return show_photo(currPhotoID)
+    return redirect(url_for('show_photo'))
 
 @app.route('/unlike/<int:currPhotoID>', methods=['GET', 'POST'])
 def unlike(currPhotoID):
     user = session['username']
     cursor = conn.cursor();
-    query = 'DELETE FROM Likes WHERE username = %s AND photoID = %s'
-    cursor.execute(query, (user, currPhotoID))
+    query = 'DELETE FROM Follow WHERE username_followed = %s AND username_follower = %s'
+    cursor.execute(query, (user, follower))
     conn.commit()
     cursor.close()
-    return show_photo(currPhotoID)
+
+    return redirect(url_for('show_photo'))
 
 @app.route('/edit/<int:currPhotoID>', methods=['GET', 'POST'])
 def edit(currPhotoID):

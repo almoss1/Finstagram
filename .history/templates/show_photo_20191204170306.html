@@ -22,11 +22,11 @@
 	<th>First Name</th>
 	<th>Last Name</th>
 
-{% for line in tagged %}
+{% for line in posts %}
 	<tr>
-		<td>{{line.username}}</td>
-		<td>{{line.firstName}}</td>
-		<td>{{line.lastName}}</td>
+		<td>{{tagged.username}}</td>
+		<td>{{tagged.firstName}}</td>
+		<td>{{tagged.lastName}}</td>
 	</tr>
 {% endfor %}
 </table>
@@ -47,7 +47,7 @@
 <br><br>
 
 {% if is_liked %}
-<a href="/unlike/{{post.photoID}}">Unlike</a>
+Unlike
 <br>
 {% else %}
 <form action="/like/{{post.photoID}}" method="POST">

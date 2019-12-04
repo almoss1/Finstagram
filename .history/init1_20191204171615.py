@@ -83,7 +83,7 @@ def like(currPhotoID):
     cursor.execute(query, (username, currPhotoID, datetime.datetime.now(), rating))
     conn.commit()
     cursor.close()
-    return show_photo(currPhotoID)
+    return show_photo()
 
 @app.route('/unlike/<int:currPhotoID>', methods=['GET', 'POST'])
 def unlike(currPhotoID):
@@ -93,7 +93,7 @@ def unlike(currPhotoID):
     cursor.execute(query, (user, currPhotoID))
     conn.commit()
     cursor.close()
-    return show_photo(currPhotoID)
+    return show_photo()
 
 @app.route('/edit/<int:currPhotoID>', methods=['GET', 'POST'])
 def edit(currPhotoID):
