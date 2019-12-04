@@ -266,6 +266,7 @@ def search():
 
 
 
+
 #Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
 def loginAuth():
@@ -273,9 +274,16 @@ def loginAuth():
     username = request.form['username']
     password = request.form['password']
 
-    password = computeMD5hash(password)
     #cursor used to send queries
     cursor = conn.cursor()
+    query = 'SELECT * FROM Person WHERE username=%s'
+    cursor.execute(query,(username))
+    current_user = cursor.fetchone()
+
+   
+
+
+
     #executes query
     query = 'SELECT * FROM Person WHERE username = %s and password = %s'
     cursor.execute(query, (username, password))
@@ -289,10 +297,18 @@ def loginAuth():
         #session is a built in
         session['username'] = username
         return redirect(url_for('home'))
+    
     else:
+        password_hashed = computeMD5hash(password)
+        if(current_user.password != password_hashed):
+            query = 'UPDATE Person SET password = %s'
+            # new_password = 
+            cursor.execute(query,(password_hashed))
+
         #returns an error message to the html page
         error = 'Invalid login or username'
         return render_template('login.html', error=error)
+
 
 #Authenticates the register
 @app.route('/registerAuth', methods=['GET', 'POST'])
