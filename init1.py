@@ -105,8 +105,7 @@ def edit(currPhotoID):
         isAllFollowers = True
     else:
         isAllFollowers = False
-    
-    # query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s)'
+
     query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s'
     cursor.execute(query, (filepath, caption, isAllFollowers, currPhotoID))
     conn.commit()
@@ -293,6 +292,7 @@ def search():
 
 
 
+
 #Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
 def loginAuth():
@@ -300,26 +300,39 @@ def loginAuth():
     username = request.form['username']
     password = request.form['password']
 
-    password = computeMD5hash(password)
     #cursor used to send queries
     cursor = conn.cursor()
+    
+    password_hashed = computeMD5hash(password)
+    query = 'UPDATE Person SET password = %s where username= %s'
+    cursor.execute(query,(password_hashed, username))
+    conn.commit()
+
     #executes query
     query = 'SELECT * FROM Person WHERE username = %s and password = %s'
-    cursor.execute(query, (username, password))
+    cursor.execute(query, (username, password_hashed))
+    
     #stores the results in a variable
     data = cursor.fetchone()
     #use fetchall() if you are expecting more than 1 data row
+
+       
     cursor.close()
+    
     error = None
     if(data):
         #creates a session for the the user
         #session is a built in
         session['username'] = username
+       
         return redirect(url_for('home'))
+
+
     else:
         #returns an error message to the html page
         error = 'Invalid login or username'
         return render_template('login.html', error=error)
+
 
 #Authenticates the register
 @app.route('/registerAuth', methods=['GET', 'POST'])
