@@ -1,0 +1,21 @@
+<html >
+  <head></head>
+  <body>
+    <h2>Manage FriendGroups</h2>
+    <form action="/add_friendGroup" method="POST">
+      <h3>Add a FriendGroup</h3>
+      <input class="form-control col-2"type="text" name="group_name" placeholder="Group Name" required></br></br>
+      <input class="form-control col-2"type="text" name="description" placeholder="Description" required></br></br>
+      <input type="submit" value="Add Group">
+      {% if error %}
+      <p class="error"><strong>Error:</strong> {{error}}</p>
+      {% endif %}
+    </form>
+
+    <br><br>
+    <a href="/home">Home</a>
+    <br><br>
+    <a href="/logout">Logout</a>
+  </body>
+
+</html>

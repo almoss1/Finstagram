@@ -278,21 +278,21 @@ def add_member():
     query = 'SELECT * FROM Person WHERE username=%s'
     cursor.execute(query, (member_name))
     data = cursor.fetchone()
-    error = None
-    if (data is None):
+    if (data):
         error = 'This member does not exist'
         return render_template('friendGroup.html', add_member_error=error)
 
-    query = 'SELECT * FROM Friendgroup WHERE groupOwner=%s AND groupName=%s '
+    query = 'SELECT * FROM Friendgroup WHERE owner_username=%s AND groupName=%s '
     cursor.execute(query, (user,group_name))
     data = cursor.fetchone()
     if (data is None):
         error = 'This group does not exist'
         return render_template('friendGroup.html', add_member_error=error)
 
-    query = 'SELECT * FROM BelongTo WHERE owner_username=%s AND groupName=%s AND member_username=%s'
+    query = 'SELECT * FROM Friendgroup WHERE owner_username=%s AND groupName=%s AND member_username=%s'
     cursor.execute(query, (user,group_name,member_name))
     data = cursor.fetchone()
+    error = None
     if (data):
         error = 'This member is already added'
         return render_template('friendGroup.html', add_member_error=error)
