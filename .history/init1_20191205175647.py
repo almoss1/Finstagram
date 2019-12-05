@@ -327,7 +327,7 @@ def share_to_friendGroup(currPhotoID):
         return render_template('friendGroup.html', error=error)
 
     query = 'INSERT INTO SharedWith (groupOwner, groupName, photoID) VALUES (%s, %s, %s)'
-    cursor.execute(query, (group[1],group[0],currPhotoID))
+    cursor.execute(query, (group.groupOwner,group.groupName,currPhotoID))
     conn.commit()
     cursor.close()
     return show_photo(currPhotoID)

@@ -1,0 +1,19 @@
+<html >
+  <head></head>
+  <body>
+    <h2>Share Photo #{{photoID}} with FriendGroups</h2>
+    <form action="/create_friendGroup" method="POST">
+      <h3>Share with:</h3>
+
+      <input type="submit" value="Share">
+      {% if create_error %}
+      <p class="error"><strong>Error:</strong> {{error}}</p>
+      {% endif %}
+    </form>
+    <br><br>
+    <a href="/home">Home</a>
+    <br><br>
+    <a href="/logout">Logout</a>
+  </body>
+
+</html>

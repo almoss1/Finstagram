@@ -302,41 +302,12 @@ def add_member():
     cursor.close()
     return render_template('friendGroup.html')
 
-@app.route('/manage_share_post/<int:currPhotoID>', methods = ['GET','POST'])
-def manage_share_post(currPhotoID):
-    user = session['username']
-    cursor = conn.cursor()
-    query = 'SELECT * FROM BelongTo WHERE member_username=%s'
-    cursor.execute(query, (user))
-    groups = cursor.fetchall()
-    cursor.close()
-    return render_template('manage_share_post.html', photoID=currPhotoID, groups=groups)
-
-@app.route('/share_to_friendGroup/<int:currPhotoID>', methods = ['GET','POST'])
-def share_to_friendGroup(currPhotoID):
-    group = request.form['group']
-    group = group.split('|^|')
-    cursor = conn.cursor()
-    query = 'SELECT * FROM SharedWith WHERE groupOwner=%s AND groupName=%s AND photoID=%s'
-    cursor.execute(query, (group[1],group[0],currPhotoID))
-    # cursor.execute(query, (group.owner_username,group.groupName,currPhotoID))
-    data = cursor.fetchone()
-    error = None
-    if (data):
-        error = 'This photo is already shared with this group'
-        return render_template('friendGroup.html', error=error)
-
-    query = 'INSERT INTO SharedWith (groupOwner, groupName, photoID) VALUES (%s, %s, %s)'
-    cursor.execute(query, (group[1],group[0],currPhotoID))
-    conn.commit()
-    cursor.close()
-    return show_photo(currPhotoID)
-
 @app.route('/search', methods = ['GET','POST'])
 def search():
     user = session['username']
-    cursor = conn.cursor()
+    cursor = conn.cursor();
     photoPoster = request.form['photoPoster']
+
 ### need to make it that 
     query = 'SELECT DISTINCT photoID, photoPoster FROM Photo WHERE photoPoster = %s '
     # OR (photoID, photoPoster) IN(SELECT photoID, photoPoster FROM (Photo AS P JOIN Follow AS F ON (F.username_followed=P.photoPoster)) WHERE followstatus=TRUE AND P.allFollowers=True AND F.username_follower = %s)OR (photoID, photoPoster) IN (SELECT photoID, photoPoster FROM SharedWith JOIN BelongTo ON (SharedWith.groupOwner= BelongTo.owner_username AND SharedWith.groupName=BelongTo.groupName) WHERE SharedWith.photoID = photoID AND BelongTo.member_username = %s)'
@@ -351,7 +322,6 @@ def search():
     error = None
     if(len(data)==0):
         error = "Invalid Username"
-        cursor.close()
         return render_template('search_by_poster.html', error=error)
     query = 'SELECT * FROM Follow where username_followed = %s and username_follower =%s and followStatus= 1'
     cursor.execute(query, (photoPoster,user))
@@ -359,7 +329,6 @@ def search():
 
     if(len(isFollowed)==0):
         error = "You are not following this person"
-        cursor.close()
         return render_template('search_by_poster.html', error=error)
 
 

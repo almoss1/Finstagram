@@ -312,26 +312,6 @@ def manage_share_post(currPhotoID):
     cursor.close()
     return render_template('manage_share_post.html', photoID=currPhotoID, groups=groups)
 
-@app.route('/share_to_friendGroup/<int:currPhotoID>', methods = ['GET','POST'])
-def share_to_friendGroup(currPhotoID):
-    group = request.form['group']
-    group = group.split('|^|')
-    cursor = conn.cursor()
-    query = 'SELECT * FROM SharedWith WHERE groupOwner=%s AND groupName=%s AND photoID=%s'
-    cursor.execute(query, (group[1],group[0],currPhotoID))
-    # cursor.execute(query, (group.owner_username,group.groupName,currPhotoID))
-    data = cursor.fetchone()
-    error = None
-    if (data):
-        error = 'This photo is already shared with this group'
-        return render_template('friendGroup.html', error=error)
-
-    query = 'INSERT INTO SharedWith (groupOwner, groupName, photoID) VALUES (%s, %s, %s)'
-    cursor.execute(query, (group[1],group[0],currPhotoID))
-    conn.commit()
-    cursor.close()
-    return show_photo(currPhotoID)
-
 @app.route('/search', methods = ['GET','POST'])
 def search():
     user = session['username']
