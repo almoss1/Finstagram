@@ -310,7 +310,7 @@ def manage_share_post(currPhotoID, error=None):
     cursor.execute(query, (user))
     groups = cursor.fetchall()
     cursor.close()
-    return render_template('manage_share_post.html', photoID=currPhotoID, groups=groups, error=error)
+    return render_template('manage_share_post.html', photoID=currPhotoID, groups=groups)
 
 @app.route('/share_to_friendGroup/<int:currPhotoID>', methods = ['GET','POST'])
 def share_to_friendGroup(currPhotoID):
@@ -324,7 +324,7 @@ def share_to_friendGroup(currPhotoID):
     error = None
     if (data):
         error = 'This photo is already shared with this group'
-        return manage_share_post(currPhotoID, error)
+        return render_template('friendGroup.html', error=error)
 
     query = 'INSERT INTO SharedWith (groupOwner, groupName, photoID) VALUES (%s, %s, %s)'
     cursor.execute(query, (group[1],group[0],currPhotoID))

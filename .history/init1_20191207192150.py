@@ -324,7 +324,7 @@ def share_to_friendGroup(currPhotoID):
     error = None
     if (data):
         error = 'This photo is already shared with this group'
-        return manage_share_post(currPhotoID, error)
+        return render_template('friendGroup.html', error=error)
 
     query = 'INSERT INTO SharedWith (groupOwner, groupName, photoID) VALUES (%s, %s, %s)'
     cursor.execute(query, (group[1],group[0],currPhotoID))

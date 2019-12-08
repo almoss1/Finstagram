@@ -5,6 +5,8 @@ TODO:
 
   Alex
   [x] Search by poster
+    --> Right now when you search you see all the photos that person can see
+        and you should only see what you have permission to see (ie if you are following them) 
   [] Analytics
 
   Channi
@@ -14,6 +16,7 @@ TODO:
   Jonathan
   [x] edit a caption
   [x] delete a post
+    --> maybe add a 'are you sure?' popup
 
 own idea:
 edit a caption
