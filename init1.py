@@ -79,7 +79,7 @@ def post():
 def show_photo(currPhotoID):
     cursor = conn.cursor()
     user = session['username']
-    # currPost = request.args['photoID']
+
     query = 'SELECT * FROM photo JOIN Person ON(username=photoPoster)  WHERE photoID=%s'
     cursor.execute(query, (currPhotoID))
     data = cursor.fetchone()
@@ -351,17 +351,11 @@ def search():
     user = session['username']
     cursor = conn.cursor()
     photoPoster = request.form['photoPoster']
-### need to make it that 
+
     query = 'SELECT  photoID, photoPoster FROM Photo WHERE photoPoster = %s order by postingDate DESC '
-    # OR (photoID, photoPoster) IN(SELECT photoID, photoPoster FROM (Photo AS P JOIN Follow AS F ON (F.username_followed=P.photoPoster)) WHERE followstatus=TRUE AND P.allFollowers=True AND F.username_follower = %s)OR (photoID, photoPoster) IN (SELECT photoID, photoPoster FROM SharedWith JOIN BelongTo ON (SharedWith.groupOwner= BelongTo.owner_username AND SharedWith.groupName=BelongTo.groupName) WHERE SharedWith.photoID = photoID AND BelongTo.member_username = %s)'
     cursor.execute(query, (photoPoster))
     data = cursor.fetchall()
     
-    # query = 'SELECT * FROM Photo where photoPoster =%s'
-
-    #when i chnaged something then the invlaid username error doesnt
-    # popo up anymore and it just lets it happen
-    # Have to fix the second if statement to see if you dont follow the person
     error = None
     if(len(data)==0):
         error = "Invalid Username"
