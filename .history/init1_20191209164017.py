@@ -379,18 +379,14 @@ def search():
 def analytics():
     user = session['username']
     cursor = conn.cursor()
-    # total number of posts
-    query = 'SELECT COUNT(photoID) AS num_photos FROM Photo WHERE photoPoster=%s'
-    cursor.execute(query, (user))
-    num_photos = cursor.fetchone()["num_photos"]
     # total number of followers
     query = 'SELECT COUNT(username_follower) AS num_followers FROM Follow WHERE username_followed=%s'
     cursor.execute(query, (user))
-    num_followers = cursor.fetchone()["num_followers"]
+    num_followers = cursor.fetchall()
     # total number followering
     query = 'SELECT COUNT(username_followed) AS num_following FROM Follow WHERE username_follower=%s'
     cursor.execute(query, (user))
-    num_following = cursor.fetchone()["num_following"]
+    num_following = cursor.fetchall()
     #this is a query to find all the pictures with all the likes it has.
     query = 'SELECT photoID, photoPoster, SUM(rating) AS total_rating FROM photo NATURAL JOIN likes WHERE photoPoster= %s group by photoPoster, photoID'
     cursor.execute(query, (user))
@@ -401,7 +397,7 @@ def analytics():
     cursor.execute(query, (user))
     most_liked = cursor.fetchall()
     cursor.close()
-    return render_template('analytics.html', total_likes=total_likes, user=user, most_liked=most_liked, num_followers=num_followers, num_following=num_following, num_photos=num_photos)
+    return render_template('analytics.html', total_likes=total_likes, user=user, most_liked=most_liked, num_followers=num_followers, num_following=num_following)
 
 
 

@@ -382,15 +382,15 @@ def analytics():
     # total number of posts
     query = 'SELECT COUNT(photoID) AS num_photos FROM Photo WHERE photoPoster=%s'
     cursor.execute(query, (user))
-    num_photos = cursor.fetchone()["num_photos"]
+    num_photos = cursor.fetchone()
     # total number of followers
     query = 'SELECT COUNT(username_follower) AS num_followers FROM Follow WHERE username_followed=%s'
     cursor.execute(query, (user))
-    num_followers = cursor.fetchone()["num_followers"]
+    num_followers = cursor.fetchone()
     # total number followering
     query = 'SELECT COUNT(username_followed) AS num_following FROM Follow WHERE username_follower=%s'
     cursor.execute(query, (user))
-    num_following = cursor.fetchone()["num_following"]
+    num_following = cursor.fetchone()
     #this is a query to find all the pictures with all the likes it has.
     query = 'SELECT photoID, photoPoster, SUM(rating) AS total_rating FROM photo NATURAL JOIN likes WHERE photoPoster= %s group by photoPoster, photoID'
     cursor.execute(query, (user))

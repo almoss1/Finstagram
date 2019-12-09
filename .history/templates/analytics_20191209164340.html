@@ -15,16 +15,7 @@
 		</style>
 		<h1>{{user}}'s Analytics</h1>
 
-		<table>
-			<th>Photos</th>
-			<th>Followers</th>
-			<th>Following</th>
-			<tr>
-				<td>{{num_photos}}</td>
-				<td>{{num_followers}}</td>
-				<td>{{num_following}}</td>
-			</tr>
-		</table>
+
 
 		<h3>Total Likes for Each Photo</h3>
 		<table>
@@ -42,7 +33,7 @@
 			{% endfor %}
 		</table>
 
-		<h3>Most Liked Photos</h3>
+		<h3>Most Liked Photos for {{user}}</h3>
 		<table>
 			<th>photoID</th>
 			<th>photoPoster</th>
