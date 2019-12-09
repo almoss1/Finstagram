@@ -73,37 +73,6 @@ def post():
     return redirect(url_for('home'))
 
 
-
-
-@app.route('/show_photo/<int:currPhotoID>', methods=["GET"])
-def show_photo(currPhotoID):
-    cursor = conn.cursor()
-    user = session['username']
-    # currPost = request.args['photoID']
-    query = 'SELECT * FROM photo JOIN Person ON(username=photoPoster)  WHERE photoID=%s'
-    cursor.execute(query, (currPhotoID))
-    data = cursor.fetchone()
-
-    query = 'SELECT * FROM Tagged NATURAL JOIN Person WHERE photoID=%s AND tagstatus=TRUE'
-    cursor.execute(query, (currPhotoID))
-    taggees = cursor.fetchall()
-
-    query = 'SELECT DISTINCT username, rating FROM Likes NATURAL JOIN Person WHERE photoID=%s'
-    cursor.execute(query, (currPhotoID))
-    likes = cursor.fetchall()
-
-    query = 'SELECT * FROM photo JOIN Person ON(username=photoPoster)  WHERE photoID=%s AND username=%s'
-    cursor.execute(query, (currPhotoID, user))
-    owner = cursor.fetchone()
-
-    query = 'SELECT * FROM Likes WHERE photoID=%s AND username=%s'
-    cursor.execute(query, (currPhotoID, user))
-    liked = cursor.fetchone()
-
-    cursor.close()
-    return render_template('show_photo.html', post=data, tagged=taggees, likees=likes, owner=owner, is_liked=liked)
-
-
 @app.route('/like/<int:currPhotoID>', methods=['GET', 'POST'])
 def like(currPhotoID):
     username = session['username']
@@ -241,6 +210,36 @@ def reject_follower(follower):
     return manage_follow_requests()
 
 
+@app.route('/show_photo/<int:currPhotoID>', methods=["GET"])
+def show_photo(currPhotoID):
+    cursor = conn.cursor()
+    user = session['username']
+    # currPost = request.args['photoID']
+    query = 'SELECT * FROM photo JOIN Person ON(username=photoPoster)  WHERE photoID=%s'
+    cursor.execute(query, (currPhotoID))
+    data = cursor.fetchone()
+
+    query = 'SELECT * FROM Tagged NATURAL JOIN Person WHERE photoID=%s AND tagstatus=TRUE'
+    cursor.execute(query, (currPhotoID))
+    taggees = cursor.fetchall()
+
+    query = 'SELECT DISTINCT username, rating FROM Likes NATURAL JOIN Person WHERE photoID=%s'
+    cursor.execute(query, (currPhotoID))
+    likes = cursor.fetchall()
+
+    query = 'SELECT * FROM photo JOIN Person ON(username=photoPoster)  WHERE photoID=%s AND username=%s'
+    cursor.execute(query, (currPhotoID, user))
+    owner = cursor.fetchone()
+
+    query = 'SELECT * FROM Likes WHERE photoID=%s AND username=%s'
+    cursor.execute(query, (currPhotoID, user))
+    liked = cursor.fetchone()
+
+    cursor.close()
+    return render_template('show_photo.html', post=data, tagged=taggees, likees=likes, owner=owner, is_liked=liked)
+
+
+
 @app.route('/search_by_poster')
 def search_by_poster():
     return render_template('search_by_poster.html', username = None, posts=None, error=None)
@@ -260,7 +259,7 @@ def create_friendGroup():
     data = cursor.fetchone()
     error = None
     if (data):
-        error = 'This group name is already used'
+        error = 'This group name already already used'
         return render_template('friendGroup.html', create_error=error)
     query = 'INSERT INTO Friendgroup (groupOwner, groupName, description) VALUES (%s, %s, %s)'
     cursor.execute(query, (user,group_name, description))
@@ -368,25 +367,10 @@ def search():
     return render_template('search_by_poster.html', username = photoPoster, posts=data, error=error)
 
 
-@app.route('/analytics')
-def analytics():
-    user = session['username']
-    cursor = conn.cursor()
-    query = 'SELECT photoID from photo'
-    top = top_rated(query)
-    return render_template('analytics.html')
 
-@app.route('/top_rated/<int:PhotoID>', methods=['GET'])
-def top_rated(PhotoID):
-    user = session['username']
-    cursor = conn.cursor()
-    # query = 'SELECT username, photoID, SUM(rating) as total_rating FROM Likes where total_rating = (SELECT max(total_rating) FROM likes WHERE photoID = %s) group by username, photoID'
-    query = 'SELECT * FROM photo WHERE photoID=%s'
-    cursor.execute(query,(PhotoID))
-    data = cursor.fetchall()
-    cursor.close()
 
-    return render_template('home.html',post = data)
+
+
 
 
 
