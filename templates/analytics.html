@@ -1,0 +1,24 @@
+
+<html>
+	<head></head>
+	<body>
+		<h1>hello</h1>
+
+
+
+		<table>
+			<th>photoID</th>
+			<th>photoPoster</th>
+			<th>Total Likes</th>
+
+
+			 {% for line in post %}
+			<tr>
+				<td><a href="/top_rated/{{line.photoID}}">{{line.photoID}}</a></td>
+				<td>{{line.username}}</td>
+				<td>{{line.total_rating}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</body>
+</html>
