@@ -399,17 +399,13 @@ def analytics():
     # cursor.execute(query, (user))
     
     # data = cursor.fetchall()
-    # query1 = 'SELECT * FROM (%s) GROUP BY photoPoster, photoID HAVING total_rating=MAX(total_rating)'
-    query = 'SELECT photoID, photoPoster, SUM(rating) AS total_rating FROM photo NATURAL JOIN likes WHERE photoPoster= %s group by photoPoster, photoID'
+    query = 'SELECT * FROM (SELECT photoID, photoPoster, SUM(rating) AS total_rating FROM photo Natural Join likes WHERE photoPoster= %s group by photoPoster, photoID) GROUP BY photoPoster, photoID HAVING total_rating=MAX(total_rating)'
     cursor.execute(query, (user))
-    total_likes = cursor.fetchall()
     
-    query = 'SELECT photoID, photoPoster, SUM(rating) AS total_rating FROM photo NATURAL JOIN likes GROUP BY photoPoster, photoID HAVING SUM(rating)=(SELECT MAX(max_value) FROM (SELECT SUM(rating) AS max_value FROM photo NATURAL JOIN likes WHERE photoPoster= %s group by photoPoster, photoID) AS T)'
-    cursor.execute(query, (user))
-    most_liked = cursor.fetchall()
+    data = cursor.fetchall()
     cursor.close()
     # top = top_rated(query)
-    return render_template('analytics.html', total_likes=total_likes, user=user, most_liked=most_liked)
+    return render_template('analytics.html', posts=data)
 
 @app.route('/top_rated/<int:PhotoID>', methods=['GET'])
 def top_rated(PhotoID):

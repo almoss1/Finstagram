@@ -31,22 +31,6 @@
 			</tr>
 			{% endfor %}
 		</table>
-
-		<h3>Most Liked Photos for {{user}}</h3>
-		<table>
-			<th>photoID</th>
-			<th>photoPoster</th>
-			<th>Total Likes</th>
-
-			
-			{% for line in most_liked %}
-			<tr>
-				<td><a href="/show_photo/{{line.photoID}}">{{line.photoID}}</a></td>
-				<td>{{line.photoPoster}}</td>
-				<td>{{line.total_rating}}</td>
-			</tr>
-			{% endfor %}
-		</table>
 		<br><br>
     <a href="/home">Home</a>
     <br><br>

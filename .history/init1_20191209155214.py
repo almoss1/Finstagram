@@ -403,8 +403,7 @@ def analytics():
     query = 'SELECT photoID, photoPoster, SUM(rating) AS total_rating FROM photo NATURAL JOIN likes WHERE photoPoster= %s group by photoPoster, photoID'
     cursor.execute(query, (user))
     total_likes = cursor.fetchall()
-    
-    query = 'SELECT photoID, photoPoster, SUM(rating) AS total_rating FROM photo NATURAL JOIN likes GROUP BY photoPoster, photoID HAVING SUM(rating)=(SELECT MAX(max_value) FROM (SELECT SUM(rating) AS max_value FROM photo NATURAL JOIN likes WHERE photoPoster= %s group by photoPoster, photoID) AS T)'
+    query = 'SELECT photoID, photoPoster, MAX(SUM(rating)) AS total_rating FROM photo NATURAL JOIN likes WHERE photoPoster= %s group by photoID'
     cursor.execute(query, (user))
     most_liked = cursor.fetchall()
     cursor.close()
