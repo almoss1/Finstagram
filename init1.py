@@ -385,43 +385,17 @@ def search():
 def analytics():
     user = session['username']
     cursor = conn.cursor()
-    # query = 'SELECT photoPoster, photoID, SUM(rating) as total_rating from photo Natural Join likes WHERE photoPoster=%s group by photoPoster, photoID Having total_rating=MAX(total_rating)'
-    # query = 'SELECT * FROM (SELECT photoPoster, photoID, SUM(rating) as total_rating from photo Natural Join likes WHERE photoPoster=%s group by photoPoster, photoID) having total_rating=MAX(total_rating)' 
-    
-    
-   
-    #     query = 'CREATE view sum_of_rating as SELECT photoPoster, photoID, SUM(rating) as total_rating FROM Likes natural JOIN Photo  WHERE photoID = %s group by username, photoID  '
-
-    #     cursor.execute(query, (user))
-    #     conn.commit()
-
-    # query = 'SELECT photoID, photoPoster, SUM(rating) AS total_rating FROM photo Natural Join likes WHERE photoPoster= ' + user + ' group by photoPoster, photoID'
-    # cursor.execute(query, (user))
-    
-    # data = cursor.fetchall()
-    # query1 = 'SELECT * FROM (%s) GROUP BY photoPoster, photoID HAVING total_rating=MAX(total_rating)'
+    #this is a query to find all the pictures with all the likes it has.
     query = 'SELECT photoID, photoPoster, SUM(rating) AS total_rating FROM photo NATURAL JOIN likes WHERE photoPoster= %s group by photoPoster, photoID'
     cursor.execute(query, (user))
     total_likes = cursor.fetchall()
     
+    # this query is to find the picture/s that has/have the most likes
     query = 'SELECT photoID, photoPoster, SUM(rating) AS total_rating FROM photo NATURAL JOIN likes GROUP BY photoPoster, photoID HAVING SUM(rating)=(SELECT MAX(max_value) FROM (SELECT SUM(rating) AS max_value FROM photo NATURAL JOIN likes WHERE photoPoster= %s group by photoPoster, photoID) AS T)'
     cursor.execute(query, (user))
     most_liked = cursor.fetchall()
     cursor.close()
-    # top = top_rated(query)
     return render_template('analytics.html', total_likes=total_likes, user=user, most_liked=most_liked)
-
-@app.route('/top_rated/<int:PhotoID>', methods=['GET'])
-def top_rated(PhotoID):
-    user = session['username']
-    cursor = conn.cursor()
-    query = ' SELECT max(SUM(rating)) FROM likes WHERE photoID = %s group by username, photoIDs '
-    # query = 'SELECT * FROM photo WHERE photoID=%s'
-    cursor.execute(query,(PhotoID))
-    data = cursor.fetchall()
-    cursor.close()
-
-    return render_template('home.html',post = data)
 
 
 
