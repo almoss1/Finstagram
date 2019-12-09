@@ -368,20 +368,38 @@ def search():
     return render_template('search_by_poster.html', username = photoPoster, posts=data, error=error)
 
 
-@app.route('/analytics')
+@app.route('/analytics', methods=['GET', 'POST'])
 def analytics():
     user = session['username']
     cursor = conn.cursor()
-    query = 'SELECT photoID from photo'
-    top = top_rated(query)
-    return render_template('analytics.html')
+    # query = 'SELECT photoPoster, photoID, SUM(rating) as total_rating from photo Natural Join likes WHERE photoPoster=%s group by photoPoster, photoID Having total_rating=MAX(total_rating)'
+    # query = 'SELECT * FROM (SELECT photoPoster, photoID, SUM(rating) as total_rating from photo Natural Join likes WHERE photoPoster=%s group by photoPoster, photoID) having total_rating=MAX(total_rating)' 
+    
+    
+   
+    #     query = 'CREATE view sum_of_rating as SELECT photoPoster, photoID, SUM(rating) as total_rating FROM Likes natural JOIN Photo  WHERE photoID = %s group by username, photoID  '
+
+    #     cursor.execute(query, (user))
+    #     conn.commit()
+
+    query = 'SELECT photoID, photoPoster, SUM(rating) as total_rating FROM photo Natural Join likes WHERE photoPoster= ' + user + ' group by photoPoster, photoID   '
+    # cursor.execute(query, (user))
+    
+    # data = cursor.fetchall()
+    query1 = 'SELECT * FROM (%s) HAVING total_rating=MAX(total_rating)'
+    cursor.execute(query1, (query))
+    
+    data = cursor.fetchall()
+    cursor.close()
+    # top = top_rated(query)
+    return render_template('analytics.html', posts=data)
 
 @app.route('/top_rated/<int:PhotoID>', methods=['GET'])
 def top_rated(PhotoID):
     user = session['username']
     cursor = conn.cursor()
-    # query = 'SELECT username, photoID, SUM(rating) as total_rating FROM Likes where total_rating = (SELECT max(total_rating) FROM likes WHERE photoID = %s) group by username, photoID'
-    query = 'SELECT * FROM photo WHERE photoID=%s'
+    query = ' SELECT max(SUM(rating)) FROM likes WHERE photoID = %s group by username, photoIDs '
+    # query = 'SELECT * FROM photo WHERE photoID=%s'
     cursor.execute(query,(PhotoID))
     data = cursor.fetchall()
     cursor.close()

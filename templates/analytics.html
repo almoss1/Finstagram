@@ -2,6 +2,17 @@
 <html>
 	<head></head>
 	<body>
+		<style type="text/css">
+				table,
+				th,
+				td {
+					border: 1px solid black;
+				}
+		
+				.padding {
+					margin-top: 25px;
+				}
+		</style>
 		<h1>hello</h1>
 
 
@@ -11,11 +22,11 @@
 			<th>photoPoster</th>
 			<th>Total Likes</th>
 
-
-			 {% for line in post %}
+			
+			{% for line in posts %}
 			<tr>
 				<td><a href="/top_rated/{{line.photoID}}">{{line.photoID}}</a></td>
-				<td>{{line.username}}</td>
+				<td>{{line.photoPoster}}</td>
 				<td>{{line.total_rating}}</td>
 			</tr>
 			{% endfor %}
