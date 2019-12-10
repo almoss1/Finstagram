@@ -134,12 +134,14 @@ def edit(currPhotoID):
     isAllFollowers = request.form['isAllFollowers']
     if (isAllFollowers == 'true'):
         isAllFollowers = True
+    else:
+        isAllFollowers = False
+    
+    if(isAllFollowers == 'true'):
         # delete sharedWith
         query = 'DELETE FROM SharedWith WHERE photoID = %s'
         cursor.execute(query, (currPhotoID))
         conn.commit()
-    else:
-        isAllFollowers = False        
 
     query = 'UPDATE Photo SET filepath=%s, caption=%s, allFollowers=%s WHERE photoID=%s'
     cursor.execute(query, (filepath, caption, isAllFollowers, currPhotoID))
